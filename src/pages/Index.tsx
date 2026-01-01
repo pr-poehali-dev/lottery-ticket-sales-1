@@ -36,7 +36,7 @@ const Index = () => {
 
   const upcomingDraw = {
     date: '2026-01-05T20:00:00',
-    jackpot: 2000000
+    jackpot: 100000
   };
 
   useEffect(() => {
@@ -161,7 +161,7 @@ const Index = () => {
                   className="gradient-purple text-white text-xl px-12 py-6 rounded-full hover:scale-110 transition-transform pulse-gold font-bold shadow-2xl"
                 >
                   <Icon name="Sparkles" className="mr-2" size={24} />
-                  Купить билет за 5₽
+                  Купить билет за 50₽
                 </Button>
               </div>
             </section>
@@ -172,7 +172,7 @@ const Index = () => {
                   <div className="w-16 h-16 gradient-gold rounded-full flex items-center justify-center mb-4 mx-auto">
                     <Icon name="DollarSign" size={32} className="text-white" />
                   </div>
-                  <CardTitle className="text-center text-2xl">Всего 5₽</CardTitle>
+                  <CardTitle className="text-center text-2xl">Всего 50₽</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-center text-muted-foreground">
@@ -279,7 +279,7 @@ const Index = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="text-center">
-                    <p className="text-5xl font-bold gradient-gold bg-clip-text text-transparent">5₽</p>
+                    <p className="text-5xl font-bold gradient-gold bg-clip-text text-transparent">50₽</p>
                   </div>
                   <ul className="space-y-2">
                     <li className="flex items-center gap-2">
@@ -308,10 +308,10 @@ const Index = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="text-center">
-                    <p className="text-5xl font-bold gradient-purple bg-clip-text text-transparent">20₽</p>
-                    <p className="text-sm text-muted-foreground line-through">25₽</p>
+                    <p className="text-5xl font-bold gradient-purple bg-clip-text text-transparent">200₽</p>
+                    <p className="text-sm text-muted-foreground line-through">250₽</p>
                   </div>
-                  <Badge className="w-full justify-center bg-green-500 text-white">Экономия 5₽</Badge>
+                  <Badge className="w-full justify-center bg-green-500 text-white">Экономия 50₽</Badge>
                   <ul className="space-y-2">
                     <li className="flex items-center gap-2">
                       <Icon name="Check" size={20} className="text-green-500" />
