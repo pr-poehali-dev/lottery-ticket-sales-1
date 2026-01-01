@@ -3,6 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
 
@@ -18,6 +21,9 @@ interface Ticket {
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [balance, setBalance] = useState(0);
+  const [depositAmount, setDepositAmount] = useState('');
+  const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [myTickets, setMyTickets] = useState<Ticket[]>([
     {
       id: 'T001',
@@ -64,6 +70,14 @@ const Index = () => {
   }, []);
 
   const buyTicket = () => {
+    if (balance < 50) {
+      toast.error('Недостаточно средств', {
+        description: 'Пополните баланс для покупки билета'
+      });
+      setIsDepositOpen(true);
+      return;
+    }
+
     const newNumbers = Array.from({ length: 6 }, () => Math.floor(Math.random() * 45) + 1).sort((a, b) => a - b);
     const newTicket: Ticket = {
       id: `T${String(myTickets.length + 1).padStart(3, '0')}`,
@@ -73,9 +87,25 @@ const Index = () => {
       status: 'pending'
     };
     
+    setBalance(balance - 50);
     setMyTickets([...myTickets, newTicket]);
     toast.success('🎉 Билет куплен!', {
-      description: `Номера: ${newNumbers.join(', ')}. Удачи!`
+      description: `Номера: ${newNumbers.join(', ')}. Удачи! Баланс: ${balance - 50}₽`
+    });
+  };
+
+  const handleDeposit = (method: string) => {
+    const amount = parseFloat(depositAmount);
+    if (!amount || amount < 50) {
+      toast.error('Минимальная сумма пополнения — 50₽');
+      return;
+    }
+    
+    setBalance(balance + amount);
+    setIsDepositOpen(false);
+    setDepositAmount('');
+    toast.success(`Баланс пополнен через ${method}`, {
+      description: `Зачислено ${amount}₽. Новый баланс: ${balance + amount}₽`
     });
   };
 
@@ -89,6 +119,86 @@ const Index = () => {
                 <Icon name="Sparkles" size={28} className="text-white" />
               </div>
               <h1 className="text-3xl font-bold gradient-gold bg-clip-text text-transparent">ЛотоМечты</h1>
+            </div>
+            <div className="flex items-center gap-3">
+              <Card className="border-2 border-yellow-400 shadow-lg">
+                <CardContent className="p-3 flex items-center gap-3">
+                  <Icon name="Wallet" size={24} className="text-yellow-600" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Баланс</p>
+                    <p className="text-xl font-bold text-yellow-600">{balance}₽</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Dialog open={isDepositOpen} onOpenChange={setIsDepositOpen}>
+                <DialogTrigger asChild>
+                  <Button className="gradient-gold text-white font-semibold">
+                    <Icon name="Plus" className="mr-2" size={20} />
+                    Пополнить
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl flex items-center gap-2">
+                      <Icon name="Wallet" size={28} className="text-yellow-600" />
+                      Пополнение баланса
+                    </DialogTitle>
+                    <DialogDescription>
+                      Выберите удобный способ пополнения
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 pt-4">
+                    <div>
+                      <Label htmlFor="amount">Сумма пополнения (мин. 50₽)</Label>
+                      <Input
+                        id="amount"
+                        type="number"
+                        placeholder="Введите сумму"
+                        value={depositAmount}
+                        onChange={(e) => setDepositAmount(e.target.value)}
+                        className="text-lg mt-2"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button
+                        onClick={() => handleDeposit('Банковская карта')}
+                        className="h-auto flex-col gap-2 py-4 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
+                      >
+                        <Icon name="CreditCard" size={32} />
+                        <span>Карта</span>
+                      </Button>
+                      <Button
+                        onClick={() => handleDeposit('СБП')}
+                        className="h-auto flex-col gap-2 py-4 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+                      >
+                        <Icon name="Smartphone" size={32} />
+                        <span>СБП</span>
+                      </Button>
+                      <Button
+                        onClick={() => handleDeposit('Криптовалюта')}
+                        className="h-auto flex-col gap-2 py-4 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
+                      >
+                        <Icon name="Bitcoin" size={32} />
+                        <span>Крипто</span>
+                      </Button>
+                      <Button
+                        onClick={() => handleDeposit('Telegram')}
+                        className="h-auto flex-col gap-2 py-4 bg-gradient-to-br from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white"
+                      >
+                        <Icon name="Send" size={32} />
+                        <span>Telegram</span>
+                      </Button>
+                      <Button
+                        onClick={() => handleDeposit('VK Pay')}
+                        className="h-auto flex-col gap-2 py-4 bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white col-span-2"
+                      >
+                        <Icon name="MessageCircle" size={32} />
+                        <span>VK Pay</span>
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
             <nav className="hidden md:flex gap-6">
               <Button variant="ghost" onClick={() => setActiveTab('home')} className="text-base hover:text-yellow-600">
