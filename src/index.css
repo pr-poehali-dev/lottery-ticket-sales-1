@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Rubik:wght@400;500;600&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,17 +15,17 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 45 100% 51%;
+    --primary-foreground: 240 10% 3.9%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 270 95% 75%;
+    --secondary-foreground: 0 0% 100%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 39 100% 57%;
+    --accent-foreground: 240 10% 3.9%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -97,5 +99,80 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: "Rubik", sans-serif;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Montserrat", sans-serif;
+  }
+}
+
+@layer utilities {
+  .confetti-bg {
+    background-image:
+      radial-gradient(circle, #ffd700 10%, transparent 10%),
+      radial-gradient(circle, #ff6b9d 10%, transparent 10%),
+      radial-gradient(circle, #9b87f5 10%, transparent 10%),
+      radial-gradient(circle, #ffa500 10%, transparent 10%);
+    background-size:
+      50px 50px,
+      60px 60px,
+      45px 45px,
+      55px 55px;
+    background-position:
+      0 0,
+      20px 20px,
+      35px 5px,
+      10px 30px;
+    animation: confetti-fall 20s linear infinite;
+  }
+
+  @keyframes confetti-fall {
+    0% {
+      background-position:
+        0 0,
+        20px 20px,
+        35px 5px,
+        10px 30px;
+    }
+    100% {
+      background-position:
+        0 100vh,
+        20px calc(100vh + 20px),
+        35px calc(100vh + 5px),
+        10px calc(100vh + 30px);
+    }
+  }
+
+  .gradient-gold {
+    background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+  }
+
+  .gradient-purple {
+    background: linear-gradient(135deg, #9b87f5 0%, #d946ef 100%);
+  }
+
+  .text-shadow-glow {
+    text-shadow:
+      0 0 20px rgba(255, 215, 0, 0.8),
+      0 0 40px rgba(255, 215, 0, 0.4);
+  }
+
+  .pulse-gold {
+    animation: pulse-gold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-gold {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 20px rgba(255, 215, 0, 0);
+    }
   }
 }
