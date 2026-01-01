@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +17,7 @@ interface Ticket {
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [myTickets, setMyTickets] = useState<Ticket[]>([
     {
       id: 'T001',
@@ -34,10 +35,33 @@ const Index = () => {
   };
 
   const upcomingDraw = {
-    date: '2026-01-05',
-    jackpot: 2000000,
-    timeLeft: '4 дня'
+    date: '2026-01-05T20:00:00',
+    jackpot: 2000000
   };
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const drawTime = new Date(upcomingDraw.date).getTime();
+      const now = new Date().getTime();
+      const difference = drawTime - now;
+
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60)
+        });
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    };
+
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const buyTicket = () => {
     const newNumbers = Array.from({ length: 6 }, () => Math.floor(Math.random() * 45) + 1).sort((a, b) => a - b);
@@ -110,9 +134,27 @@ const Index = () => {
                 <h2 className="text-5xl md:text-7xl font-extrabold text-white mb-4 text-shadow-glow">
                   Исполни мечту!
                 </h2>
-                <p className="text-xl md:text-2xl text-white mb-8 font-medium">
-                  Розыгрыш через {upcomingDraw.timeLeft}
-                </p>
+                <div className="mb-8">
+                  <p className="text-xl text-white mb-4 font-medium">Розыгрыш через:</p>
+                  <div className="flex justify-center gap-4 flex-wrap">
+                    <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 min-w-[80px]">
+                      <p className="text-4xl font-bold text-white">{String(timeLeft.days).padStart(2, '0')}</p>
+                      <p className="text-sm text-white/80 mt-1">дней</p>
+                    </div>
+                    <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 min-w-[80px]">
+                      <p className="text-4xl font-bold text-white">{String(timeLeft.hours).padStart(2, '0')}</p>
+                      <p className="text-sm text-white/80 mt-1">часов</p>
+                    </div>
+                    <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 min-w-[80px]">
+                      <p className="text-4xl font-bold text-white">{String(timeLeft.minutes).padStart(2, '0')}</p>
+                      <p className="text-sm text-white/80 mt-1">минут</p>
+                    </div>
+                    <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 min-w-[80px]">
+                      <p className="text-4xl font-bold text-white">{String(timeLeft.seconds).padStart(2, '0')}</p>
+                      <p className="text-sm text-white/80 mt-1">секунд</p>
+                    </div>
+                  </div>
+                </div>
                 <Button 
                   size="lg" 
                   onClick={buyTicket}
